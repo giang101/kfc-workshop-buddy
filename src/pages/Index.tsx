@@ -1,29 +1,55 @@
 import { useState } from "react";
 import { LoginPage } from "@/components/auth/LoginPage";
 import { WorkshopRegistration } from "@/components/workshop/WorkshopRegistration";
+import { SlotAvailability } from "@/components/workshop/SlotAvailability";
 
 const Index = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
+  const [currentStep, setCurrentStep] = useState<'welcome' | 'registration' | 'slots' | 'complete'>('welcome');
+  const [registrationData, setRegistrationData] = useState({
+    selectedDate: '',
+    selectedTime: ''
+  });
 
   const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
+    setCurrentStep('registration');
   };
 
-  const handleRegistrationSuccess = () => {
-    setIsRegistrationComplete(true);
-    // Reset to login for demo purposes or redirect to success page
+  const handleRegistrationData = (data: any) => {
+    setRegistrationData({
+      selectedDate: data.preferredDate,
+      selectedTime: data.preferredTime
+    });
+    setCurrentStep('slots');
+  };
+
+  const handleSlotContinue = () => {
+    setCurrentStep('complete');
+    // Reset to welcome for demo purposes
     setTimeout(() => {
-      setIsLoggedIn(false);
-      setIsRegistrationComplete(false);
+      setCurrentStep('welcome');
     }, 3000);
   };
 
-  if (!isLoggedIn) {
+  const handleSlotBack = () => {
+    setCurrentStep('registration');
+  };
+
+  if (currentStep === 'welcome') {
     return <LoginPage onLoginSuccess={handleLoginSuccess} />;
   }
 
-  return <WorkshopRegistration onRegistrationSuccess={handleRegistrationSuccess} />;
+  if (currentStep === 'slots') {
+    return (
+      <SlotAvailability 
+        onContinue={handleSlotContinue}
+        onBack={handleSlotBack}
+        selectedDate={registrationData.selectedDate}
+        selectedTime={registrationData.selectedTime}
+      />
+    );
+  }
+
+  return <WorkshopRegistration onRegistrationSuccess={handleRegistrationData} />;
 };
 
 export default Index;

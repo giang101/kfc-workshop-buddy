@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Upload, Calendar, Clock, User, Phone, ImageIcon, CheckCircle } from "lucide-react";
 
 interface WorkshopRegistrationProps {
-  onRegistrationSuccess: () => void;
+  onRegistrationSuccess: (data: { preferredDate: string; preferredTime: string }) => void;
 }
 
 export const WorkshopRegistration = ({ onRegistrationSuccess }: WorkshopRegistrationProps) => {
@@ -119,7 +119,10 @@ export const WorkshopRegistration = ({ onRegistrationSuccess }: WorkshopRegistra
           title: "SMS xác nhận đã gửi",
           description: `Tin nhắn xác nhận đã được gửi tới +84${formData.parentPhone}`,
         });
-        onRegistrationSuccess();
+        onRegistrationSuccess({
+          preferredDate: formData.workshopDate,
+          preferredTime: formData.workshopTime
+        });
       }, 2000);
     }, 2000);
   };
@@ -147,7 +150,10 @@ export const WorkshopRegistration = ({ onRegistrationSuccess }: WorkshopRegistra
                 </p>
               </div>
               <Button 
-                onClick={onRegistrationSuccess}
+                onClick={() => onRegistrationSuccess({
+                  preferredDate: formData.workshopDate,
+                  preferredTime: formData.workshopTime
+                })}
                 variant="kfc"
                 size="lg"
                 className="w-full"
