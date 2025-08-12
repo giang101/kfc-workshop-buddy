@@ -1,14 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { LoginPage } from "@/components/auth/LoginPage";
+import { WorkshopRegistration } from "@/components/workshop/WorkshopRegistration";
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleRegistrationSuccess = () => {
+    setIsRegistrationComplete(true);
+    // Reset to login for demo purposes or redirect to success page
+    setTimeout(() => {
+      setIsLoggedIn(false);
+      setIsRegistrationComplete(false);
+    }, 3000);
+  };
+
+  if (!isLoggedIn) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  return <WorkshopRegistration onRegistrationSuccess={handleRegistrationSuccess} />;
 };
 
 export default Index;
